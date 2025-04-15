@@ -4,15 +4,18 @@ import { useRef, useState } from "react";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const audioRef = useRef(null);
+  // ✅ Properly typed ref for an <audio> element
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const toggleAudio = () => {
-    if (!audioRef.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
+
     if (isPlaying) {
-      audioRef.current.pause();
+      audio.pause();
     } else {
-      audioRef.current.play();
+      audio.play();
     }
     setIsPlaying(!isPlaying);
   };
@@ -46,17 +49,17 @@ export default function Home() {
         >
           Office
         </text>
-        {/* Stick figure person at desk (simplified for now) */}
-
       </svg>
 
-
-        <audio controls loop className={styles.audio}>
-          <source src="/audio/office.mp3" type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </audio>
-
-
+      <audio
+        ref={audioRef}
+        controls
+        loop
+        className={styles.audio}
+      >
+        <source src="/audio/office.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
     </div>
   );
 }
